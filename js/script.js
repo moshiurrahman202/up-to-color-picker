@@ -24,17 +24,17 @@ function main(){
  changebtn.addEventListener("click", () =>{
      const bgColor = genHexcol();
      root.style.backgroundColor = bgColor;
-     output.value = bgColor;
+     output.value = bgColor.substring(1);
  });
 
  copybtn.addEventListener("click", () =>{
-     navigator.clipboard.writeText(output.value);
+     navigator.clipboard.writeText(`#${output.value}`);
      if(div !== null){
          div.remove();
          div = null;
      }
      if(isHexValid(output.value)){
-        geberateToastMessage(`${output.value} copied`)
+        geberateToastMessage(`#${output.value} copied`)
      }else{
          alert("Invalid color code!")
      }
@@ -43,8 +43,11 @@ function main(){
 
 output.addEventListener("keyup", function(e){
     const color = e.target.value;
-    if(color && isHexValid(color)){
-        root.style.backgroundColor = color;
+    if(color){
+        output.value = color.toUpperCase();
+        if(isHexValid(color)){
+            root.style.backgroundColor = `#${color}`;
+        }
     }
 });
 // Step 2 => random rgb color generator function
@@ -79,10 +82,8 @@ function geberateToastMessage(msg){
  * @param {string} color 
  */
 function isHexValid(color){
-    if(color.length !== 7)return false;
-    if (color[0] !== "#") return false;
+    if(color.length !== 6)return false;
 
-    color = color.substring(1);
     return/^[0-9A-Fa-f]{6}$/i.test(color);
 }
 // Step 3 => collect all necerssry referrences
