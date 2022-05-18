@@ -5,6 +5,8 @@
 => Add a button to copy the hex code
 => Add a toast message when copied
 => User can type ther own hex code too
+=> show RGB Color too but do not need to edit it
+=> User can also copy RGB color code 
 */
 
 // Globals
