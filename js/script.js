@@ -21,12 +21,16 @@ function main(){
  const root = document.getElementById("root");
  const changebtn = document.getElementById("changebtn");
  const output = document.getElementById("output");
+ const output2 = document.getElementById("output2")
  const copybtn = document.getElementById("copy-btn");
 
  changebtn.addEventListener("click", () =>{
-     const bgColor = genHexcol();
-     root.style.backgroundColor = bgColor;
-     output.value = bgColor.substring(1);
+     const color = generateColorDecimal();
+     const hex = genHexcol(color);
+     const rgb = genRgbCol(color);
+     root.style.backgroundColor = hex;
+     output.value = hex.substring(1);
+     output2.value = rgb;
  });
 
  copybtn.addEventListener("click", () =>{
@@ -52,17 +56,35 @@ output.addEventListener("keyup", function(e){
         }
     }
 });
-// Step 2 => random rgb color generator function
-function genHexcol(){
-    // formate of rgb color high=> rgb(0,0,0) low=> rgb(255,255,255)
-    // 255, 255, 255 =hex-> #ffffff
+
+// function 1 => generate three randon decimal number for red, green and blue
+// return as a object
+function generateColorDecimal(){
     const red = Math.floor(Math.random() *255);
     const green = Math.floor(Math.random() *255);
     const blue = Math.floor(Math.random() *255);
-    return `#${red.toString(16)}${green.toString(16)}${blue.toString(16)}`;
+    return{
+        red,
+        green,
+        blue,
+    };
+}
+
+// function 2 generate hex color code
+function genHexcol({red, green, blue}){
+    // const {red, green, blue} = generateColorDecimal();
+    const getTowCode = (color) => {
+        const hex = color.toString(16);
+        return hex.length == 1 ? `0${hex}` : hex;
+    }
+    return `#${getTowCode(red)}${getTowCode(green)}${getTowCode(blue)}`.toUpperCase();
 
 }
 
+// function 3 gemerate rgba color code
+function genRgbCol({red, green, blue}){
+    return `rgb(${red}, ${green}, ${blue})`;
+}
 function geberateToastMessage(msg){
    div = document.createElement("div");
     div.innerText = msg;
@@ -88,6 +110,7 @@ function isHexValid(color){
 
     return/^[0-9A-Fa-f]{6}$/i.test(color);
 }
+// Step 2 => random rgb color generator function
 // Step 3 => collect all necerssry referrences
 // Step 4 => handel the Change Button click event
 // Step 5 => handle the copy Button Click event
@@ -97,3 +120,5 @@ function isHexValid(color){
 // Step 9 => Create isHexValid function
 // Step 10 => Implement change handler on input field
 // Step 11 => prevent copy Hex code if it is not valid
+// Step 12 => Refactor the color generator function
+// Step 13 => Update color code to desplay rgb colors
