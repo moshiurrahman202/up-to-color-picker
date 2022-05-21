@@ -21,9 +21,11 @@ function main(){
  const root = document.getElementById("root");
  const changebtn = document.getElementById("changebtn");
  const output = document.getElementById("output");
- const output2 = document.getElementById("output2")
+ const output2 = document.getElementById("output2");
  const copybtn = document.getElementById("copy-btn");
+ const copybtn2 = document.getElementById("copy-btn2");
 
+ // for change color
  changebtn.addEventListener("click", () =>{
      const color = generateColorDecimal();
      const hex = genHexcol(color);
@@ -33,6 +35,7 @@ function main(){
      output2.value = rgb;
  });
 
+ // for hex copy 
  copybtn.addEventListener("click", () =>{
      navigator.clipboard.writeText(`#${output.value}`);
      if(div !== null){
@@ -45,14 +48,30 @@ function main(){
          alert("Invalid color code!")
      }
  });
+
+ // for rgb copy 
+ copybtn2.addEventListener("click", () =>{
+    navigator.clipboard.writeText(`#${output2.value}`);
+    if(div !== null){
+        div.remove();
+        div = null;
+    }
+    if(isHexValid(output.value)){
+       geberateToastMessage(`${output2.value} copied`)
+    }else{
+        alert("Invalid color code!")
+    }
+});
 }
 
+// for write hex code
 output.addEventListener("keyup", function(e){
     const color = e.target.value;
     if(color){
         output.value = color.toUpperCase();
         if(isHexValid(color)){
             root.style.backgroundColor = `#${color}`;
+            output2.value = hexTorgb(color);
         }
     }
 });
@@ -85,6 +104,18 @@ function genHexcol({red, green, blue}){
 function genRgbCol({red, green, blue}){
     return `rgb(${red}, ${green}, ${blue})`;
 }
+/**
+ *  convert hex to rgb 
+ * @param {string} hex 
+ */
+function hexTorgb(hex){
+    const red = parseInt(hex.slice(0, 2), 16);
+    const green = parseInt(hex.slice(2, 4), 16);
+    const blue = parseInt(hex.slice(4), 16);
+    return `rgb(${red}, ${green}, ${blue})`
+}
+
+// for toast message
 function geberateToastMessage(msg){
    div = document.createElement("div");
     div.innerText = msg;
@@ -102,7 +133,7 @@ function geberateToastMessage(msg){
 
 }
 /**
- * 
+ * for check hex code
  * @param {string} color 
  */
 function isHexValid(color){
@@ -122,3 +153,6 @@ function isHexValid(color){
 // Step 11 => prevent copy Hex code if it is not valid
 // Step 12 => Refactor the color generator function
 // Step 13 => Update color code to desplay rgb colors
+// Step 14 => Create hex to rgb function
+// Step 15 => Update change handler
+// Step 16 => Implement copy function
