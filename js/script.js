@@ -155,4 +155,4 @@ function isHexValid(color){
 // Step 13 => Update color code to desplay rgb colors
 // Step 14 => Create hex to rgb function
 // Step 15 => Update change handler
-// Step 16 => Implement copy function
+// Step 16 => Implement copy function for rgb
