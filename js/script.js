@@ -3,12 +3,17 @@
  * => Description : Color picker application with huge dom functionalities
  */
 // Globals
-let div = null;
-
+let toastContainer = null;
+const defaultColor = {
+    red: 7,
+    green: 22,
+    blue: 103
+}
 // => create onload handler
 window.onload = () =>{
     main();
-}
+    updateColorCodeToDom(defaultColor);
+};
 
 // main or boot function
 function main(){
@@ -19,7 +24,7 @@ function main(){
     const colorSlaiderGreen = document.getElementById("color-slider-green");
     const colorSlaiderBlue = document.getElementById("color-slider-blue");
     const copyToClipboardBtn = document.getElementById("copy-to-clipboard");
-    const colorModeRadios = document.getElementsByName("color-mode");
+    
 
  // // event listeners
  generaterandomcolorbtn.addEventListener("click", generaterandomcolorforbtn);
@@ -27,19 +32,7 @@ function main(){
  colorSlaiderRed.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderGreen.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderBlue.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
- copyToClipboardBtn.addEventListener("click", function(){
-    const mode = getCheckRadioValues(colorModeRadios);
-    if(mode == null){
-        throw new Error("Invalid Radio Input");
-    }
-    if(mode == "hex"){
-        const hexcolor = document.getElementById("input-hex").value;
-        navigator.clipboard.writeText(`#${hexcolor}`);
-    }else{
-        const rgbColor = document.getElementById("input-rgb").value;
-        navigator.clipboard.writeText(rgbColor);
-    }
-})
+ copyToClipboardBtn.addEventListener("click", forCopyToClipBoard)
 //  // event handlears
 //  function generaterandomcolorforbtn () {
 //     const color = generateColorDecimal();
@@ -93,6 +86,12 @@ function main(){
         if(isHexValid(hexcolor)){
             const color = hexToDecimalColors(hexcolor)
             updateColorCodeToDom(color);
+        }else{
+            if(toastContainer !== null){
+                toastContainer.remove();
+                toastContainer = null;
+                     }
+            generateToastMessage("Invalid Input!")
         }
     }
 }
@@ -108,25 +107,59 @@ function handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue)
     };
 }
 
+function forCopyToClipBoard(){
+    const colorModeRadios = document.getElementsByName("color-mode");
+    const mode = getCheckRadioValues(colorModeRadios);
+    if(mode == null){
+        throw new Error("Invalid Radio Input");
+    }
+    if(toastContainer !== null){
+        toastContainer.remove();
+        toastContainer = null;
+             }
+    if(mode == "hex"){
+        const hexcolor = document.getElementById("input-hex").value;
+        if(hexcolor && isHexValid(hexcolor)){
+            navigator.clipboard.writeText(`#${hexcolor}`);
+            generateToastMessage(`#${hexcolor} Copied`)
+        }else{
+            // alert("Invalid Hex Color")
+            generateToastMessage("Invalid Hex Color")
+        }
+        
+    }else{
+        const rgbColor = document.getElementById("input-rgb").value;
+        if(rgbColor){
+            navigator.clipboard.writeText(rgbColor);
+            generateToastMessage(`${rgbColor} Copied`)
+        }else{
+            // alert("Invalid RGB Color")
+           
+            generateToastMessage("Invalid RGB Color")
+        }
+        
+    }
+}
+
 
  /**
   * for toast message
   * @param {string} msg 
   */
- function geberateToastMessage(msg){
-    div = document.createElement("div");
-     div.innerText = msg;
-     div.className = "toast-message toast-message-slide-in";
-     div.addEventListener("click", ()=>{
-         div.classList.remove("toast-message-slide-in");
-         div.classList.add("toast-message-slide-out");
+ function generateToastMessage(msg){
+    toastContainer = document.createElement("div");
+     toastContainer.innerText = msg;
+     toastContainer.className = "toast-message toast-message-slide-in";
+     toastContainer.addEventListener("click", ()=>{
+        toastContainer.classList.remove("toast-message-slide-in");
+        toastContainer.classList.add("toast-message-slide-out");
  
-         div.addEventListener("animationend", ()=>{
-             div.remove();
-             div = null;
+         toastContainer.addEventListener("animationend", ()=>{
+             toastContainer.remove();
+             toastContainer = null;
          })
      })
-     document.body.appendChild(div);
+     document.body.appendChild(toastContainer);
  
  }
 
