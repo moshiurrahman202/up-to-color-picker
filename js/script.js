@@ -18,36 +18,35 @@ function main(){
     const colorSlaiderRed = document.getElementById("color-slider-red");
     const colorSlaiderGreen = document.getElementById("color-slider-green");
     const colorSlaiderBlue = document.getElementById("color-slider-blue");
+    const copyToClipboardBtn = document.getElementById("copy-to-clipboard");
+    const colorModeRadios = document.getElementsByName("color-mode");
+
  // // event listeners
  generaterandomcolorbtn.addEventListener("click", generaterandomcolorforbtn);
  colorModeHexInp.addEventListener("keyup", colorModeHexForInp);
  colorSlaiderRed.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderGreen.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderBlue.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
+ copyToClipboardBtn.addEventListener("click", function(){
+    const mode = getCheckRadioValues(colorModeRadios);
+    if(mode == null){
+        throw new Error("Invalid Radio Input");
+    }
+    if(mode == "hex"){
+        const hexcolor = document.getElementById("input-hex").value;
+        navigator.clipboard.writeText(`#${hexcolor}`);
+    }else{
+        const rgbColor = document.getElementById("input-rgb").value;
+        navigator.clipboard.writeText(rgbColor);
+    }
+})
 //  // event handlears
 //  function generaterandomcolorforbtn () {
 //     const color = generateColorDecimal();
 //    updateColorCodeToDom(color)
 // }
 
- // dom functions
- // for toast message
- function geberateToastMessage(msg){
-    div = document.createElement("div");
-     div.innerText = msg;
-     div.className = "toast-message toast-message-slide-in";
-     div.addEventListener("click", ()=>{
-         div.classList.remove("toast-message-slide-in");
-         div.classList.add("toast-message-slide-out");
  
-         div.addEventListener("animationend", ()=>{
-             div.remove();
-             div = null;
-         })
-     })
-     document.body.appendChild(div);
- 
- }
 
  
 
@@ -109,7 +108,44 @@ function handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue)
     };
 }
 
-  //  utils
+
+ /**
+  * for toast message
+  * @param {string} msg 
+  */
+ function geberateToastMessage(msg){
+    div = document.createElement("div");
+     div.innerText = msg;
+     div.className = "toast-message toast-message-slide-in";
+     div.addEventListener("click", ()=>{
+         div.classList.remove("toast-message-slide-in");
+         div.classList.add("toast-message-slide-out");
+ 
+         div.addEventListener("animationend", ()=>{
+             div.remove();
+             div = null;
+         })
+     })
+     document.body.appendChild(div);
+ 
+ }
+
+ /**
+  * 
+  * @param {Array} nodes
+  * @returns {string | null} 
+  */
+ function getCheckRadioValues(nodes){
+     let checkedValue = null;
+     for(let i = 0; i < nodes.length; i++){
+         if (nodes[i].checked){
+             checkedValue = nodes[i].value;
+             break;
+         }
+     }
+     return checkedValue;
+ }
+
   /**
   * update dom element with calculated color values
   * @param {object}  color
