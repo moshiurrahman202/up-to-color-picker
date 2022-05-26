@@ -5,14 +5,45 @@
 // Globals
 let toastContainer = null;
 const defaultColor = {
-    red: 7,
-    green: 22,
-    blue: 103
-}
+    red: 221,
+    green: 222,
+    blue: 238
+};
+
+const defaultPresetColors = [
+	'#ffcdd2',
+	'#f8bbd0',
+	'#e1bee7',
+	'#ff8a80',
+	'#ff80ab',
+	'#ea80fc',
+	'#b39ddb',
+	'#9fa8da',
+	'#90caf9',
+	'#b388ff',
+	'#8c9eff',
+	'#82b1ff',
+	'#03a9f4',
+	'#00bcd4',
+	'#009688',
+	'#80d8ff',
+	'#84ffff',
+	'#a7ffeb',
+	'#c8e6c9',
+	'#dcedc8',
+	'#f0f4c3',
+	'#b9f6ca',
+	'#ccff90',
+	'#ffcc80',
+];
+
+const copiedSound = new Audio("sound/copied-sound.wav");
 // => create onload handler
 window.onload = () =>{
     main();
     updateColorCodeToDom(defaultColor);
+    // invoke display preset color
+    displayPresetColorBox(document.getElementById("preset-colors"), defaultPresetColors)
 };
 
 // main or boot function
@@ -24,6 +55,7 @@ function main(){
     const colorSlaiderGreen = document.getElementById("color-slider-green");
     const colorSlaiderBlue = document.getElementById("color-slider-blue");
     const copyToClipboardBtn = document.getElementById("copy-to-clipboard");
+    const presetColorParent = document.getElementById("preset-colors");
     
 
  // // event listeners
@@ -32,54 +64,17 @@ function main(){
  colorSlaiderRed.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderGreen.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  colorSlaiderBlue.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
- copyToClipboardBtn.addEventListener("click", forCopyToClipBoard)
-//  // event handlears
-//  function generaterandomcolorforbtn () {
-//     const color = generateColorDecimal();
-//    updateColorCodeToDom(color)
-// }
-
- 
-
- 
-
-
- // for hex copy 
-//  copybtn.addEventListener("click", () =>{
-//      navigator.clipboard.writeText(`#${output.value}`);
-//      if(div !== null){
-//          div.remove();
-//          div = null;
-//      }
-//      if(isHexValid(output.value)){
-//         geberateToastMessage(`#${output.value} copied`)
-//      }else{
-//          alert("Invalid color code!")
-//      }
-//  });
-
- // for rgb copy 
-//  copybtn2.addEventListener("click", () =>{
-//     navigator.clipboard.writeText(`#${output2.value}`);
-//     if(div !== null){
-//         div.remove();
-//         div = null;
-//     }
-//     if(isHexValid(output.value)){
-//        geberateToastMessage(`${output2.value} copied`)
-//     }else{
-//         alert("Invalid color code!")
-//     }
-// });
+ copyToClipboardBtn.addEventListener("click", forCopyToClipBoard);
+ presetColorParent.addEventListener("click", presetColorChild);
 }
 
- // event handlears
+// event handlears
  function generaterandomcolorforbtn () {
     const color = generateColorDecimal();
    updateColorCodeToDom(color)
  }
 
- function colorModeHexForInp(e){
+function colorModeHexForInp(e){
     const hexcolor = e.target.value;
     if(hexcolor){
         this.value = hexcolor.toUpperCase();
@@ -141,7 +136,21 @@ function forCopyToClipBoard(){
     }
 }
 
+function presetColorChild(e){
+    const child = e.target;
+    if(child.className == "color-box"){
+        navigator.clipboard.writeText(child.getAttribute("data-color"));
+        copiedSound.volume = 0.3;
+        copiedSound.play();
+        if(toastContainer !== null){
+            toastContainer.remove();
+            toastContainer = null;
+                 };
+        generateToastMessage(child.getAttribute("data-color"));
+    }
+}
 
+// dom functions
  /**
   * for toast message
   * @param {string} msg 
@@ -197,22 +206,31 @@ function forCopyToClipBoard(){
     document.getElementById("color-slider-blue").value = color.blue;
     document.getElementById("color-slider-blue-label").innerText = color.blue;
  }
+/**
+ * create div element with class name color box and attribute
+ * @param {string} color
+ * @returns {object}
+ */
+function generatePresetColorBox(color){
+    const div = document.createElement("div");
+    div.className = "color-box";
+    div.style.backgroundColor = color;
+    div.setAttribute("data-color", color);
+    return div;
+}
 
-
-// for write hex code
-// output.addEventListener("keyup", function(e){
-//     const color = e.target.value;
-//     if(color){
-//         output.value = color.toUpperCase();
-//         if(isHexValid(color)){
-//             root.style.backgroundColor = `#${color}`;
-//             output2.value = hexTorgb(color);
-//         }
-//     }
-// });
-
-
-
+/**
+ * this function will create and append new boxs to its parent
+ * @param {object} parent
+ * @param {Array} colors
+ */
+function displayPresetColorBox(parent, colors){
+    colors.forEach(color =>{
+        const colorBox = generatePresetColorBox(color);
+        parent.appendChild(colorBox);
+    })
+}
+// utils
 /**
  * function 1 => generate three randon decimal number for red, green and blue
  * @returns {object}
