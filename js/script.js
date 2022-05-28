@@ -146,7 +146,7 @@ function presetColorChild(e){
             toastContainer.remove();
             toastContainer = null;
                  };
-        generateToastMessage(child.getAttribute("data-color"));
+        generateToastMessage(`${child.getAttribute("data-color")} Copied`);
     }
 }
 
