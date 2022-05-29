@@ -148,6 +148,7 @@ function presetColorChild(e){
                  };
         generateToastMessage(`${child.getAttribute("data-color")} Copied`);
     }
+
 }
 
 // dom functions
