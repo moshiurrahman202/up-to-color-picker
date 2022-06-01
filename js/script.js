@@ -37,13 +37,14 @@ const defaultPresetColors = [
 	'#ffcc80',
 ];
 
+const cunstomColors = [];
 const copiedSound = new Audio("sound/copied-sound.wav");
 // => create onload handler
 window.onload = () =>{
     main();
     updateColorCodeToDom(defaultColor);
     // invoke display preset color
-    displayPresetColorBox(document.getElementById("preset-colors"), defaultPresetColors)
+    displayColorBoxs(document.getElementById("preset-colors"), defaultPresetColors)
 };
 
 // main or boot function
@@ -55,7 +56,9 @@ function main(){
     const colorSlaiderGreen = document.getElementById("color-slider-green");
     const colorSlaiderBlue = document.getElementById("color-slider-blue");
     const copyToClipboardBtn = document.getElementById("copy-to-clipboard");
+    const saveToCustomBtn = document.getElementById("save-to-custom");
     const presetColorParent = document.getElementById("preset-colors");
+    const customColorParent = document.getElementById("custom-colors");
     
 
  // // event listeners
@@ -66,6 +69,8 @@ function main(){
  colorSlaiderBlue.addEventListener("change", handleColerSlider(colorSlaiderRed, colorSlaiderGreen, colorSlaiderBlue));
  copyToClipboardBtn.addEventListener("click", forCopyToClipBoard);
  presetColorParent.addEventListener("click", presetColorChild);
+ saveToCustomBtn.addEventListener("click", saveToCustomColor(customColorParent, colorModeHexInp));
+ customColorParent.addEventListener("click", presetColorChild)
 }
 
 // event handlears
@@ -151,6 +156,15 @@ function presetColorChild(e){
 
 }
 
+function saveToCustomColor(customColorParent, inputHex){
+    
+    return function () {
+        cunstomColors.push(`#${inputHex.value}`);
+        removeChildren(customColorParent);
+        displayColorBoxs(customColorParent, cunstomColors);
+        presetColorChild();
+    }
+ }
 // dom functions
  /**
   * for toast message
@@ -212,7 +226,7 @@ function presetColorChild(e){
  * @param {string} color
  * @returns {object}
  */
-function generatePresetColorBox(color){
+function generateColorBox(color){
     const div = document.createElement("div");
     div.className = "color-box";
     div.style.backgroundColor = color;
@@ -225,11 +239,23 @@ function generatePresetColorBox(color){
  * @param {object} parent
  * @param {Array} colors
  */
-function displayPresetColorBox(parent, colors){
+function displayColorBoxs(parent, colors){
     colors.forEach(color =>{
-        const colorBox = generatePresetColorBox(color);
+        const colorBox = generateColorBox(color);
         parent.appendChild(colorBox);
     })
+}
+
+/**
+ * remove all children from parent
+ * @param {object} parent
+ */
+function removeChildren(parent){
+    let child = parent.lastElementChild;
+    while(child){
+        parent.removeChild(child);
+        child = parent.lastElementChild;
+    }
 }
 // utils
 /**
