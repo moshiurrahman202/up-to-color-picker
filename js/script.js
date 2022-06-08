@@ -37,7 +37,7 @@ const defaultPresetColors = [
 	'#ffcc80',
 ];
 
-const cunstomColors = [];
+let cunstomColors = new Array(24);
 const copiedSound = new Audio("sound/copied-sound.wav");
 // => create onload handler
 window.onload = () =>{
@@ -159,10 +159,22 @@ function presetColorChild(e){
 function saveToCustomColor(customColorParent, inputHex){
     
     return function () {
-        cunstomColors.push(`#${inputHex.value}`);
+        const color = `#${inputHex.value}`;
+        if(cunstomColors.includes(color)){
+            if(toastContainer !== null){
+                toastContainer.remove();
+                toastContainer = null;
+                     };
+            generateToastMessage("Already in your list!");
+            return;
+        }
+        cunstomColors.unshift(color);
+        if(cunstomColors.length > 5){
+            cunstomColors = cunstomColors.slice(0, 5);
+        }
         removeChildren(customColorParent);
         displayColorBoxs(customColorParent, cunstomColors);
-        presetColorChild();
+        
     }
  }
 // dom functions
