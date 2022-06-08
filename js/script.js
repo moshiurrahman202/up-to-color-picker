@@ -169,8 +169,8 @@ function saveToCustomColor(customColorParent, inputHex){
             return;
         }
         cunstomColors.unshift(color);
-        if(cunstomColors.length > 5){
-            cunstomColors = cunstomColors.slice(0, 5);
+        if(cunstomColors.length > 24){
+            cunstomColors = cunstomColors.slice(0, 24);
         }
         removeChildren(customColorParent);
         displayColorBoxs(customColorParent, cunstomColors);
