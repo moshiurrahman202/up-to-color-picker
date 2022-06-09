@@ -44,7 +44,13 @@ window.onload = () =>{
     main();
     updateColorCodeToDom(defaultColor);
     // invoke display preset color
-    displayColorBoxs(document.getElementById("preset-colors"), defaultPresetColors)
+    displayColorBoxs(document.getElementById("preset-colors"), defaultPresetColors);
+    const cunstomColorsString = localStorage.getItem("custom-colors");
+    if(cunstomColorsString){
+        cunstomColors = JSON.parse(cunstomColorsString);
+        displayColorBoxs(document.getElementById("custom-colors"), cunstomColors);
+    }
+
 };
 
 // main or boot function
@@ -172,6 +178,7 @@ function saveToCustomColor(customColorParent, inputHex){
         if(cunstomColors.length > 24){
             cunstomColors = cunstomColors.slice(0, 24);
         }
+        localStorage.setItem("custom-colors", JSON.stringify(cunstomColors));
         removeChildren(customColorParent);
         displayColorBoxs(customColorParent, cunstomColors);
         
@@ -253,8 +260,10 @@ function generateColorBox(color){
  */
 function displayColorBoxs(parent, colors){
     colors.forEach(color =>{
+        if(isHexValid(color.slice(1))){
         const colorBox = generateColorBox(color);
         parent.appendChild(colorBox);
+        }
     })
 }
 
