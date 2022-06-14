@@ -65,7 +65,9 @@ function main(){
     const saveToCustomBtn = document.getElementById("save-to-custom");
     const presetColorParent = document.getElementById("preset-colors");
     const customColorParent = document.getElementById("custom-colors");
-    
+    const bgFileInputBtn = document.getElementById("bg-file-input-btn");
+    const bgFileInput = document.getElementById("bg-file-input");
+    const bgbgPreview = document.getElementById("bg-preview");
 
  // // event listeners
  generaterandomcolorbtn.addEventListener("click", generaterandomcolorforbtn);
@@ -76,7 +78,16 @@ function main(){
  copyToClipboardBtn.addEventListener("click", forCopyToClipBoard);
  presetColorParent.addEventListener("click", presetColorChild);
  saveToCustomBtn.addEventListener("click", saveToCustomColor(customColorParent, colorModeHexInp));
- customColorParent.addEventListener("click", presetColorChild)
+ customColorParent.addEventListener("click", presetColorChild);
+ bgFileInputBtn.addEventListener("click", function(){
+    bgFileInput.click();
+ });
+ bgFileInput.addEventListener("change", function(event){
+    const file =event.target.files[0];
+    const imgUrl = URL.createObjectURL(file);
+    bgbgPreview.style.background = `url(${imgUrl})`;
+    document.body.style.background = `url(${imgUrl})`
+ })
 }
 
 // event handlears
@@ -203,7 +214,6 @@ function saveToCustomColor(customColorParent, inputHex){
          })
      })
      document.body.appendChild(toastContainer);
- 
  }
 
  /**
