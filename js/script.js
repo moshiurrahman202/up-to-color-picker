@@ -49,6 +49,12 @@ window.onload = () =>{
     if(cunstomColorsString){
         cunstomColors = JSON.parse(cunstomColorsString);
         displayColorBoxs(document.getElementById("custom-colors"), cunstomColors);
+    };
+    const localImg = localStorage.getItem("recent-image");
+    if(localImg){
+        document.getElementById("bg-preview").style.background = `url(${localImg})`;
+        document.body.style.background = `url(${localImg})`;
+        document.getElementById("bg-file-delete-btn").style.display = "inline";
     }
 
 };
@@ -84,21 +90,41 @@ function main(){
  bgFileInputBtn.addEventListener("click", function(){
     bgFileInput.click();
  });
- bgFileInput.addEventListener("change", function(event){
-    const file =event.target.files[0];
-    const imgUrl = URL.createObjectURL(file);
-    bgbgPreview.style.background = `url(${imgUrl})`;
-    document.body.style.background = `url(${imgUrl})`;
-    bgFileDeleteBtn.style.display = "inline";
+ bgFileInput.addEventListener("change", function(){
+    const reader  = new FileReader();
+    reader.addEventListener("load", function(){
+        bgbgPreview.style.background = `url(${reader.result})`;
+        document.body.style.background = `url(${reader.result})`;
+        bgFileDeleteBtn.style.display = "inline";
+        localStorage.setItem("recent-image", reader.result);
+    })
+    reader.readAsDataURL(this.files[0]);
  });
- bgFileDeleteBtn.addEventListener("click", function(){
+
+  bgFileDeleteBtn.addEventListener("click", function(){
     bgbgPreview.style.background = "none";
     bgbgPreview.style.backgroundColor = "#DDDEEE";
     document.body.style.background = `none`;
     document.body.style.background = `#DDDEEE`;
     bgFileDeleteBtn.style.display = "none";
     bgFileInput.value = null;
- })
+    localStorage.clear();
+ });
+//  bgFileInput.addEventListener("change", function(event){
+//     const file =event.target.files[0];
+//     const imgUrl = URL.createObjectURL(file);
+//     bgbgPreview.style.background = `url(${imgUrl})`;
+//     document.body.style.background = `url(${imgUrl})`;
+//     bgFileDeleteBtn.style.display = "inline";
+//  });
+//  bgFileDeleteBtn.addEventListener("click", function(){
+//     bgbgPreview.style.background = "none";
+//     bgbgPreview.style.backgroundColor = "#DDDEEE";
+//     document.body.style.background = `none`;
+//     document.body.style.background = `#DDDEEE`;
+//     bgFileDeleteBtn.style.display = "none";
+//     bgFileInput.value = null;
+//  })
 }
 
 // event handlears
