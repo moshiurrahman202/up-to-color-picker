@@ -52,9 +52,11 @@ window.onload = () =>{
     };
     const localImg = localStorage.getItem("recent-image");
     if(localImg){
+        console.log(localImg);
         document.getElementById("bg-preview").style.background = `url(${localImg})`;
         document.body.style.background = `url(${localImg})`;
         document.getElementById("bg-file-delete-btn").style.display = "inline";
+        document.getElementById("bg-controller").style.display = "inline";
     }
 
 };
@@ -73,9 +75,11 @@ function main(){
     const customColorParent = document.getElementById("custom-colors");
     const bgFileInputBtn = document.getElementById("bg-file-input-btn");
     const bgFileInput = document.getElementById("bg-file-input");
-    const bgbgPreview = document.getElementById("bg-preview");
+    const bgPreview = document.getElementById("bg-preview");
     const bgFileDeleteBtn = document.getElementById("bg-file-delete-btn");
     bgFileDeleteBtn.style.display = "none";
+    const bgRighiController = document.getElementById("bg-controller");
+    bgRighiController.style.display = "none";
 
  // // event listeners
  generaterandomcolorbtn.addEventListener("click", generaterandomcolorforbtn);
@@ -90,26 +94,14 @@ function main(){
  bgFileInputBtn.addEventListener("click", function(){
     bgFileInput.click();
  });
- bgFileInput.addEventListener("change", function(){
-    const reader  = new FileReader();
-    reader.addEventListener("load", function(){
-        bgbgPreview.style.background = `url(${reader.result})`;
-        document.body.style.background = `url(${reader.result})`;
-        bgFileDeleteBtn.style.display = "inline";
-        localStorage.setItem("recent-image", reader.result);
-    })
-    reader.readAsDataURL(this.files[0]);
- });
+ bgFileInput.addEventListener("change", funBgFileInput(bgPreview,bgFileDeleteBtn,bgRighiController));
 
-  bgFileDeleteBtn.addEventListener("click", function(){
-    bgbgPreview.style.background = "none";
-    bgbgPreview.style.backgroundColor = "#DDDEEE";
-    document.body.style.background = `none`;
-    document.body.style.background = `#DDDEEE`;
-    bgFileDeleteBtn.style.display = "none";
-    bgFileInput.value = null;
-    localStorage.clear();
- });
+ bgFileDeleteBtn.addEventListener("click", funBgFileDelete(bgPreview,bgFileDeleteBtn,bgFileInput,bgRighiController));
+ document.getElementById("bg-size").addEventListener("change", changeBackgroundStatus);
+ document.getElementById("bg-repeat").addEventListener("change", changeBackgroundStatus);
+ document.getElementById("bg-position").addEventListener("change", changeBackgroundStatus);
+ document.getElementById("bg-attachment").addEventListener("change", changeBackgroundStatus);
+
 //  bgFileInput.addEventListener("change", function(event){
 //     const file =event.target.files[0];
 //     const imgUrl = URL.createObjectURL(file);
@@ -232,6 +224,34 @@ function saveToCustomColor(customColorParent, inputHex){
         
     }
  }
+
+ function funBgFileInput(bgPreview, bgFileDelBtn, bgController){
+    return function(){
+        const reader  = new FileReader();
+        reader.addEventListener("load", function(){
+            bgPreview.style.background = `url(${reader.result})`;
+            document.body.style.background = `url(${reader.result})`;
+            bgFileDelBtn.style.display = "inline";
+            bgController.style.display = "inline";
+            localStorage.setItem("recent-image", reader.result);
+        })
+        reader.readAsDataURL(this.files[0]);
+     };
+ };
+
+ function funBgFileDelete(bgPreview,bgFileDeleteBtn,bgFileInput,bgRighiController){
+    return function(){
+        bgPreview.style.background = "none";
+        bgPreview.style.backgroundColor = "#DDDEEE";
+        document.body.style.background = `none`;
+        document.body.style.background = `#DDDEEE`;
+        bgFileDeleteBtn.style.display = "none";
+        bgFileInput.value = null;
+        bgRighiController.style.display = "none";
+        localStorage.removeItem("recent-image");
+        // localStorage.clear();
+     };
+ };
 // dom functions
  /**
   * for toast message
@@ -324,6 +344,13 @@ function removeChildren(parent){
         parent.removeChild(child);
         child = parent.lastElementChild;
     }
+}
+
+function changeBackgroundStatus(){
+    document.body.style.backgroundSize = document.getElementById("bg-size").value;
+    document.body.style.backgroundRepeat = document.getElementById("bg-repeat").value;
+    document.body.style.backgroundPosition = document.getElementById("bg-position").value;
+    document.body.style.backgroundAttachment = document.getElementById("bg-attachment").value;
 }
 // utils
 /**
