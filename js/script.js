@@ -102,21 +102,6 @@ function main(){
  document.getElementById("bg-position").addEventListener("change", changeBackgroundStatus);
  document.getElementById("bg-attachment").addEventListener("change", changeBackgroundStatus);
 
-//  bgFileInput.addEventListener("change", function(event){
-//     const file =event.target.files[0];
-//     const imgUrl = URL.createObjectURL(file);
-//     bgbgPreview.style.background = `url(${imgUrl})`;
-//     document.body.style.background = `url(${imgUrl})`;
-//     bgFileDeleteBtn.style.display = "inline";
-//  });
-//  bgFileDeleteBtn.addEventListener("click", function(){
-//     bgbgPreview.style.background = "none";
-//     bgbgPreview.style.backgroundColor = "#DDDEEE";
-//     document.body.style.background = `none`;
-//     document.body.style.background = `#DDDEEE`;
-//     bgFileDeleteBtn.style.display = "none";
-//     bgFileInput.value = null;
-//  })
 }
 
 // event handlears
