@@ -50,14 +50,14 @@ window.onload = () =>{
         cunstomColors = JSON.parse(cunstomColorsString);
         displayColorBoxs(document.getElementById("custom-colors"), cunstomColors);
     };
-    const localImg = localStorage.getItem("recent-image");
-    if(localImg){
-        console.log(localImg);
-        document.getElementById("bg-preview").style.background = `url(${localImg})`;
-        document.body.style.background = `url(${localImg})`;
-        document.getElementById("bg-file-delete-btn").style.display = "inline";
-        document.getElementById("bg-controller").style.display = "inline";
-    }
+    // const localImg = localStorage.getItem("recent-image");
+    // if(localImg){
+    //     console.log(localImg);
+    //     document.getElementById("bg-preview").style.background = `url(${localImg})`;
+    //     document.body.style.background = `url(${localImg})`;
+    //     document.getElementById("bg-file-delete-btn").style.display = "inline";
+    //     document.getElementById("bg-controller").style.display = "inline";
+    // }
 
 };
 
@@ -218,7 +218,7 @@ function saveToCustomColor(customColorParent, inputHex){
             document.body.style.background = `url(${reader.result})`;
             bgFileDelBtn.style.display = "inline";
             bgController.style.display = "inline";
-            localStorage.setItem("recent-image", reader.result);
+            // localStorage.setItem("recent-image", reader.result);
         })
         reader.readAsDataURL(this.files[0]);
      };
@@ -233,7 +233,7 @@ function saveToCustomColor(customColorParent, inputHex){
         bgFileDeleteBtn.style.display = "none";
         bgFileInput.value = null;
         bgRighiController.style.display = "none";
-        localStorage.removeItem("recent-image");
+        // localStorage.removeItem("recent-image");
         // localStorage.clear();
      };
  };
@@ -256,6 +256,13 @@ function saveToCustomColor(customColorParent, inputHex){
          })
      })
      document.body.appendChild(toastContainer);
+     setTimeout(()=>{
+        const alert = document.querySelector('.toast-message');
+
+        if(alert){
+            alert.remove();
+        }
+    }, 3000);
  }
 
  /**
